@@ -28,38 +28,46 @@ pipeline {
 
         stage('Terraform Init') {
             steps {
-                sh '''
-                export AWS_ACCESS_KEY_ID=$AWS_CREDS_USR
-                export AWS_SECRET_ACCESS_KEY=$AWS_CREDS_PSW
-                terraform init
-                '''
+                dir('Terraform'){
+                    sh '''
+                    export AWS_ACCESS_KEY_ID=$AWS_CREDS_USR
+                    export AWS_SECRET_ACCESS_KEY=$AWS_CREDS_PSW
+                    terraform init
+                    '''
+                }
             }
         }
 
         stage('Terraform Validate') {
             steps {
-                sh 'terraform validate'
+                dir('Terraform'){
+                    sh 'terraform validate'
+                }
             }
         }
 
         stage('Terraform Plan') {
             steps {
-                sh '''
-                export AWS_ACCESS_KEY_ID=$AWS_CREDS_USR
-                export AWS_SECRET_ACCESS_KEY=$AWS_CREDS_PSW
-                terraform plan
-                '''
+                dir('Terraform'){
+                    sh '''
+                    export AWS_ACCESS_KEY_ID=$AWS_CREDS_USR
+                    export AWS_SECRET_ACCESS_KEY=$AWS_CREDS_PSW
+                    terraform plan
+                    '''
+                }
             }
         }
 
         stage('Terraform Apply') {
             steps {
-                input message: "Approve Terraform Apply?"
-                sh '''
-                export AWS_ACCESS_KEY_ID=$AWS_CREDS_USR
-                export AWS_SECRET_ACCESS_KEY=$AWS_CREDS_PSW
-                terraform apply -auto-approve
-                '''
+                dir('Terraform'){
+                    input message: "Approve Terraform Apply?"
+                    sh '''
+                    export AWS_ACCESS_KEY_ID=$AWS_CREDS_USR
+                    export AWS_SECRET_ACCESS_KEY=$AWS_CREDS_PSW
+                    terraform apply -auto-approve
+                    '''
+                }
             }
         }
     }
