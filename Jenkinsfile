@@ -2,9 +2,8 @@ pipeline {
     agent any
 
     environment {
-        AWS_ACCESS_KEY_ID     = credentials('aws-creds').username
-        AWS_SECRET_ACCESS_KEY = credentials('aws-creds').password
         TF_VERSION = "1.6.6"
+        AWS_CREDS  = credentials('aws-creds')
     }
 
     stages {
@@ -12,6 +11,9 @@ pipeline {
         stage('Install Terraform') {
             steps {
                 sh '''
+                export AWS_ACCESS_KEY_ID=$AWS_CREDS_USR
+                export AWS_SECRET_ACCESS_KEY=$AWS_CREDS_PSW
+
                 if ! command -v terraform >/dev/null 2>&1; then
                   sudo apt-get update -y
                   sudo apt-get install -y wget unzip
@@ -26,7 +28,11 @@ pipeline {
 
         stage('Terraform Init') {
             steps {
-                sh 'terraform init'
+                sh '''
+                export AWS_ACCESS_KEY_ID=$AWS_CREDS_USR
+                export AWS_SECRET_ACCESS_KEY=$AWS_CREDS_PSW
+                terraform init
+                '''
             }
         }
 
@@ -38,14 +44,22 @@ pipeline {
 
         stage('Terraform Plan') {
             steps {
-                sh 'terraform plan'
+                sh '''
+                export AWS_ACCESS_KEY_ID=$AWS_CREDS_USR
+                export AWS_SECRET_ACCESS_KEY=$AWS_CREDS_PSW
+                terraform plan
+                '''
             }
         }
 
         stage('Terraform Apply') {
             steps {
                 input message: "Approve Terraform Apply?"
-                sh 'terraform apply -auto-approve'
+                sh '''
+                export AWS_ACCESS_KEY_ID=$AWS_CREDS_USR
+                export AWS_SECRET_ACCESS_KEY=$AWS_CREDS_PSW
+                terraform apply -auto-approve
+                '''
             }
         }
     }
