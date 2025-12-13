@@ -1,14 +1,11 @@
-variable "aws_region" {
-  description = "AWS Region"
-  type        = string
+variable "ami_id" {
+  description = "AMI ID for EC2"
 }
 
 variable "instance_type" {
-  description = "EC2 Instance Type"
-  type        = string
+  description = "EC2 instance type"
 }
 
-variable "ami_id" {
-  description = "AMI ID"
-  type        = string
+variable "key_name" {
+  description = "EC2 Key Pair name"
 }
