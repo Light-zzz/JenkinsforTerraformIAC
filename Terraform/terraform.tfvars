@@ -1,3 +1,3 @@
-aws_region   = "eu-north-1"
-instance_type = "t3.micro"
-ami_id        = "ami-0fa91bc90632c73c9"
+ami_id        = "ami-0fa91bc90632c73c9" #Ubuntu linux
+instance_type = "t2.micro"
+key_name      = "OfficeLaptop"
