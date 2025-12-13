@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         TF_VERSION = "1.6.6"
-        AWS_CREDS  = credentials('aws-creds')
+        AWS_CREDS  = credentials('aws_creds')
     }
 
     stages {
