@@ -24,7 +24,7 @@ pipeline {
                   OS=$ID
                 fi
 
-                if [[ "$OS" == "ubuntu" || "$OS" == "amzn" ]]; then
+                if [[ "$OS" == "ubuntu" || "$OS" == "fedora" ]]; then
                   apt-get update -y
                   apt-get install -y wget unzip
                 else
