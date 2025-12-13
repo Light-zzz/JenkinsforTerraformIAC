@@ -115,11 +115,12 @@ resource "aws_instance" "ansible_ec2" {
   associate_public_ip_address = true
   key_name                    = var.key_name
 
-  user_data = <<-EOF
+user_data = <<-EOF
               #!/bin/bash
-              yum update -y
-              amazon-linux-extras enable ansible2
-              yum install -y ansible
+              apt-get update -y
+              apt-get install -y software-properties-common
+              add-apt-repository --yes --update ppa:ansible/ansible
+              apt-get install -y ansible
               ansible --version
               EOF
 
