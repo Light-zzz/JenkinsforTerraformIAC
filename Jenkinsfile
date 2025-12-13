@@ -12,8 +12,9 @@ pipeline {
         stage('Install Terraform') {
             steps {
                 sh '''
-                if ! terraform -v; then
-                  sudo yum install -y unzip wget
+                if ! command -v terraform >/dev/null 2>&1; then
+                  sudo apt-get update -y
+                  sudo apt-get install -y wget unzip
                   wget https://releases.hashicorp.com/terraform/${TF_VERSION}/terraform_${TF_VERSION}_linux_amd64.zip
                   unzip terraform_${TF_VERSION}_linux_amd64.zip
                   sudo mv terraform /usr/local/bin/
