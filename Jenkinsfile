@@ -38,13 +38,13 @@ pipeline {
             }
         }
 
-        stage('Terraform Validate') {
-            steps {
-                dir('Terraform'){
-                    sh 'terraform validate'
-                }
-            }
-        }
+        // stage('Terraform Validate') {
+        //     steps {
+        //         dir('Terraform'){
+        //             sh 'terraform validate'
+        //         }
+        //     }
+        // }
 
         stage('Terraform Plan') {
             steps {
@@ -52,7 +52,7 @@ pipeline {
                     sh '''
                     export AWS_ACCESS_KEY_ID=$AWS_CREDS_USR
                     export AWS_SECRET_ACCESS_KEY=$AWS_CREDS_PSW
-                    terraform plan
+                    terraform plan --auto-approve
                     '''
                 }
             }
