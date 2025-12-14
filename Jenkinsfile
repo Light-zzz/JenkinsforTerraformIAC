@@ -70,11 +70,18 @@ pipeline {
                 }
             }
         }
+        stage('Terraform Destroy') {
+            steps {
+                dir("${TF_DIR}") {
+                    sh 'terraform Destroy -auto-approve tfplan'
+                }
+            }
+        }
     }
 
     post {
         success {
-            echo 'Terraform deployment successful'
+            echo 'Terraform deployment and Destroy successful'
         }
         failure {
             echo 'Terraform deployment failed'
