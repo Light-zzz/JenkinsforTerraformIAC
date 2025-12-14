@@ -1,21 +1,24 @@
 Terraform IAC Using Jenkins CI/CD
+
+Below is a complete end-to-end setup for AWS Ubuntu Linux where:
+•	Jenkins is installed on Ubuntu EC2
+•	Terraform is installed via Jenkins pipeline
+•	Terraform HCL code is stored in GitHub
+•	Pipeline runs terraform init, validate, plan, apply, destroy
+•	Uses AWS credentials securely
 -----------------------------------------------------------------------------------------------------------------------------------------------------------
-**Step 1: AWS EC2 Prerequisites**
-
+Step 1: AWS EC2 Prerequisites
 Launch EC2:
-AMI: Ubuntu 22.04
-Instance type: t2.medium (recommended)
-Security Group:
-TCP 22 → Your IP
-TCP 8080 → Your IP (Jenkins)
+•	AMI: Ubuntu 22.04
+•	Instance type: t3.micro (recommended)
+•	Security Group:
+o	TCP 22 → Your IP
+o	TCP 8080 → Your IP (Jenkins)
 IAM Role (Recommended):
-Attach role with required Terraform permissions
-(Avoid access keys if possible)
+•	Attach role with required Terraform permissions (Avoid access keys if possible)
 ----------------------------------------------------------------------------------------------------------------------------------------------------------
-**Step 2: Install Jenkins on Ubuntu
-
-Command:**
-
+Step 2: Install Jenkins on Ubuntu
+Command:
 sudo apt update
 sudo apt install -y openjdk-17-jre
 
@@ -34,23 +37,23 @@ sudo systemctl start jenkins
 
 URL : http://<Public_IP>:8080
 ----------------------------------------------------------------------------------------------------------------------------------------------------
-**Step 3: Configure AWS Access (Choose One)**
+Step 3: Configure AWS Access (Choose One)
 
-**Option A (Best): IAM Role**
-Attach IAM role to EC2
-Terraform automatically authenticates
-No keys needed
+Option A (Best): IAM Role
+•	Attach IAM role to EC2
+•	Terraform automatically authenticates
+•	No keys needed
 
 Option B: Access Key (Not Recommended)
-Jenkins → Manage Jenkins → Credentials
-Add:
-Kind: Secret text
-ID: aws-access-key
-ID: aws-secret-key
+•	Jenkins → Manage Jenkins → Credentials
+•	Add:
+o	Kind: Secret text
+o	ID: aws-access-key
+o	ID: aws-secret-key
 ---------------------------------------------------------------------------------------------------------------------------------------------------
-**Step 4: GitHub Repo Structure**
+Step 4: GitHub Repo Structure
 
-terraform-repo/
+JenkinsforTerraformIAC/
 ├── Terraform/
 │   ├── main.tf
 │   ├── provider.tf
@@ -58,10 +61,9 @@ terraform-repo/
 │   └── outputs.tf
 └── Jenkinsfile
 ---------------------------------------------------------------------------------------------------------------------------------------------------
-**Step 5: Jenkinsfile (Terraform Pipeline added destroy steps)**
+Step 5: Jenkinsfile (Terraform Pipeline added destroy steps)
 
-**Pipeline code :**
-
+Pipeline code :
 
 pipeline {
     agent any
@@ -154,16 +156,14 @@ pipeline {
     }
 }
 ----------------------------------------------------------------------------------------------------------------------------------------------------
-**Step 6: Jenkins Permissions Fix (IMPORTANT)**
-
+Step 6: Jenkins Permissions Fix (IMPORTANT)
 Terraform install requires sudo access:
 sudo visudo
 Add:
 jenkins ALL=(ALL) NOPASSWD: ALL
 ----------------------------------------------------------------------------------------------------------------------------------------------------
-**Step 7: Trigger Pipeline**
-
-Create Pipeline job
-Select Pipeline script from SCM
-Add GitHub repo URL
-Save → Build Now
+Step 7: Trigger Pipeline
+•	Create Pipeline job
+•	Select Pipeline script from SCM
+•	Add GitHub repo URL
+•	Save → Build Now
