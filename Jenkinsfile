@@ -19,12 +19,21 @@ pipeline {
         stage('Install Terraform') {
             steps {
                 sh '''
+                # Install unzip if missing
+                if ! command -v unzip >/dev/null 2>&1; then
+                  echo "Installing unzip..."
+                  sudo apt-get update -y
+                  sudo apt-get install -y unzip
+                fi
+        
+                # Install terraform if missing
                 if ! command -v terraform >/dev/null 2>&1; then
                   echo "Installing Terraform..."
                   curl -O https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip
                   unzip terraform_${TERRAFORM_VERSION}_linux_amd64.zip
                   sudo mv terraform /usr/local/bin/
                 fi
+        
                 terraform -version
                 '''
             }
