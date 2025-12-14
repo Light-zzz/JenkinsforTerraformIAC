@@ -1,3 +1,12 @@
-ami_id        = "ami-0fa91bc90632c73c9" #Ubuntu linux
-instance_type = "t3.micro"
-key_name      = "OfficeLaptop"
+aws_region = "eu-north-1"
+vpc_cidr = "10.0.0.0/16"
+public_subnet_cidr = "10.0.1.0/24"
+private_subnet_cidr = "10.0.2.0/24"
+ami = "ami-0fa91bc90632c73c9" # example Ubuntu AMI - CHANGE to valid for your region
+key_name = "OfficeLaptop"
+instance_type_master = "t3.micro"
+instance_type_slave = "t3.micro"
+ssh_cidr = "0.0.0.0/0"
+availability_zone_1a = "eu-north-1a"
+availability_zone_1b = "eu-north-1b"
+availability_zone_1c = "eu-north-1c"
