@@ -1,24 +1,39 @@
 Terraform IAC Using Jenkins CI/CD
 
 Below is a complete end-to-end setup for AWS Ubuntu Linux where:
-•	Jenkins is installed on Ubuntu EC2
-•	Terraform is installed via Jenkins pipeline
-•	Terraform HCL code is stored in GitHub
-•	Pipeline runs terraform init, validate, plan, apply, destroy
-•	Uses AWS credentials securely
------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Jenkins is installed on Ubuntu EC2
+
+Terraform is installed via Jenkins pipeline
+
+Terraform HCL code is stored in GitHub
+
+Pipeline runs terraform init, validate, plan, apply, destroy
+
+Uses AWS credentials securely
+
 Step 1: AWS EC2 Prerequisites
+
 Launch EC2:
-•	AMI: Ubuntu 22.04
-•	Instance type: t3.micro (recommended)
-•	Security Group:
-o	TCP 22 → Your IP
-o	TCP 8080 → Your IP (Jenkins)
+
+AMI: Ubuntu 22.04
+
+Instance type: t3.micro (recommended)
+
+Security Group:
+
+TCP 22 → Your IP
+
+TCP 8080 → Your IP (Jenkins)
+
 IAM Role (Recommended):
-•	Attach role with required Terraform permissions (Avoid access keys if possible)
-----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Attach role with required Terraform permissions (avoid access keys if possible)
+
 Step 2: Install Jenkins on Ubuntu
-Command:
+
+Commands:
+
 sudo apt update
 sudo apt install -y openjdk-17-jre
 
@@ -35,24 +50,30 @@ sudo apt install -y jenkins
 sudo systemctl enable jenkins
 sudo systemctl start jenkins
 
-URL : http://<Public_IP>:8080
-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+URL: http://<Public_IP>:8080
+
 Step 3: Configure AWS Access (Choose One)
 
 Option A (Best): IAM Role
-•	Attach IAM role to EC2
-•	Terraform automatically authenticates
-•	No keys needed
+
+Attach IAM role to EC2
+
+Terraform automatically authenticates
+
+No keys needed
 
 Option B: Access Key (Not Recommended)
-•	Jenkins → Manage Jenkins → Credentials
-•	Add:
-o	Kind: Secret text
-o	ID: aws-access-key
-o	ID: aws-secret-key
----------------------------------------------------------------------------------------------------------------------------------------------------
-Step 4: GitHub Repo Structure
 
+Jenkins → Manage Jenkins → Credentials → Add:
+
+Kind: Secret text
+
+ID: aws-access-key
+
+ID: aws-secret-key
+
+Step 4: GitHub Repo Structure
 JenkinsforTerraformIAC/
 ├── Terraform/
 │   ├── main.tf
@@ -60,11 +81,8 @@ JenkinsforTerraformIAC/
 │   ├── variables.tf
 │   └── outputs.tf
 └── Jenkinsfile
----------------------------------------------------------------------------------------------------------------------------------------------------
-Step 5: Jenkinsfile (Terraform Pipeline added destroy steps)
 
-Pipeline code :
-
+Step 5: Jenkinsfile (Terraform Pipeline with destroy step)
 pipeline {
     agent any
 
@@ -86,21 +104,19 @@ pipeline {
         stage('Install Terraform') {
             steps {
                 sh '''
-                # Install unzip if missing
                 if ! command -v unzip >/dev/null 2>&1; then
                   echo "Installing unzip..."
                   sudo apt-get update -y
                   sudo apt-get install -y unzip
                 fi
-        
-                # Install terraform if missing
+
                 if ! command -v terraform >/dev/null 2>&1; then
                   echo "Installing Terraform..."
                   curl -O https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip
                   unzip terraform_${TERRAFORM_VERSION}_linux_amd64.zip
                   sudo mv terraform /usr/local/bin/
                 fi
-        
+
                 terraform -version
                 '''
             }
@@ -137,6 +153,7 @@ pipeline {
                 }
             }
         }
+
         stage('Terraform Destroy') {
             steps {
                 dir("${TF_DIR}") {
@@ -155,15 +172,24 @@ pipeline {
         }
     }
 }
-----------------------------------------------------------------------------------------------------------------------------------------------------
+
 Step 6: Jenkins Permissions Fix (IMPORTANT)
+
 Terraform install requires sudo access:
+
 sudo visudo
+
+
 Add:
+
 jenkins ALL=(ALL) NOPASSWD: ALL
-----------------------------------------------------------------------------------------------------------------------------------------------------
+
 Step 7: Trigger Pipeline
-•	Create Pipeline job
-•	Select Pipeline script from SCM
-•	Add GitHub repo URL
-•	Save → Build Now
+
+Create Pipeline job
+
+Select Pipeline script from SCM
+
+Add GitHub repo URL
+
+Save → Build Now
