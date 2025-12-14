@@ -73,7 +73,7 @@ pipeline {
         stage('Terraform Destroy') {
             steps {
                 dir("${TF_DIR}") {
-                    sh 'terraform destroy -auto-approve tfplan'
+                    sh 'terraform destroy -auto-approve'
                 }
             }
         }
