@@ -62,6 +62,27 @@ resource "aws_security_group" "sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
+    ingress {
+    from_port   = 9090
+    to_port     = 9090
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+    ingress {
+    from_port   = 3000
+    to_port     = 3000
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+    ingress {
+    from_port   = 9100
+    to_port     = 9100
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
   ingress {
     from_port   = 80
     to_port     = 80
@@ -77,28 +98,39 @@ resource "aws_security_group" "sg" {
   }
 }
 
-# Master EC2
-resource "aws_instance" "master" {
+# Prometheus EC2
+resource "aws_instance" "Prometheus" {
   ami                    = var.ami
-  instance_type          = var.instance_type_master
+  instance_type          = var.instance_type_prometheus
   subnet_id              = aws_subnet.public.id
   vpc_security_group_ids = [aws_security_group.sg.id]
   associate_public_ip_address = true
   key_name = var.key_name
-#  user_data = file("jenkins-user-data.sh")
-  tags = { Name = "Terraform-instance" }
+  user_data = file("Prometheus.sh")
+  tags = { Name = "Prometheus-VM" }
 }
 
-# Slave EC2
-# resource "aws_instance" "slave" {
-# ami                    = var.ami
-#  instance_type          = var.instance_type_slave
-#  subnet_id              = aws_subnet.public.id
-#  vpc_security_group_ids = [aws_security_group.sg.id]
-#  associate_public_ip_address = true
-#  key_name = var.key_name
-#  user_data = file("Slave-user-data.sh")
-#  tags = { Name = "slave-instance" }
-#}
+# Grafana EC2
+resource "aws_instance" "Grafana" {
+ami                    = var.ami
+ instance_type          = var.instance_type_grafana
+ subnet_id              = aws_subnet.public.id
+ vpc_security_group_ids = [aws_security_group.sg.id]
+ associate_public_ip_address = true
+ key_name = var.key_name
+ user_data = file("Grafana.sh")
+ tags = { Name = "Grafana-VM" }
+}
 
-#Completed......
+# Nginx EC2
+resource "aws_instance" "Nginx-Server" {
+ami                    = var.ami
+ instance_type          = var.Nginx
+ subnet_id              = aws_subnet.public.id
+ vpc_security_group_ids = [aws_security_group.sg.id]
+ associate_public_ip_address = true
+ key_name = var.key_name
+ user_data = file("setup-nginx-node.sh")
+ tags = { Name = "Nginx-Node-VM" }
+}
+
