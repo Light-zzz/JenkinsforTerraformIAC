@@ -42,7 +42,10 @@ pipeline {
         stage('Terraform Init') {
             steps {
                 dir("${TF_DIR}") {
-                    sh 'terraform init -reconfigure'
+                    sh '''
+                  //rm -rf .terraform .terraform.lock.hcl
+                    terraform init -upgrade -reconfigure
+                    '''
                 }
             }
         }
