@@ -22,17 +22,16 @@ type = string
 }
 
 
-variable "instance_type_master" {
+variable "instance_type_prometheus" {
 description = "EC2 instance type for Jenkins master"
 type = string
 }
 
 
-#variable "instance_type_slave" {
-#description = "EC2 instance type for Jenkins slave"
-#type = string
-#}
-
+variable "instance_type_grafana" {
+description = "EC2 instance type for Jenkins slave"
+type = string
+}
 
 variable "ami" {
 description = "AMI ID for both instances (Ubuntu 22.04 or Amazon Linux)"
@@ -63,4 +62,9 @@ variable "availability_zone_1b" {
 
 variable "availability_zone_1c" {
   description = "Select the Availability zone eu-north-1c"
+}
+
+variable "Nginx" {
+  description = "Enter the Value of nginx sserver"
+  type = string
 }
