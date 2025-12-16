@@ -66,6 +66,13 @@ sudo systemctl daemon-reload
 sudo systemctl enable prometheus
 sudo systemctl start prometheus
 
-#---------------------------------------
-#End Of Script
-#---------------------------------------
+# -----------------------------
+# FINAL STATUS
+# -----------------------------
+echo "===== Installation Completed ====="
+echo "Prometheus Status:"
+sudo systemctl status prometheus --no-pager
+
+echo "----------------------------------"
+echo "Prometheus URL: http://<EC2-IP>:9090"
+echo "----------------------------------"
