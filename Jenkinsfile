@@ -5,6 +5,7 @@ pipeline {
         TERRAFORM_VERSION = "1.6.6" //change version according to your need
         TF_DIR = "Terraform" //Change the Folder name
         AWS_DEFAULT_REGION = "eu-north-1" //Change the region
+        TF_PLUGIN_TIMEOUT   = "300s" //Plugin timeout
     }
 
     stages {
